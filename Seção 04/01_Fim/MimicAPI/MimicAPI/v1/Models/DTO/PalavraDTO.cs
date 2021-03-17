@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MimicAPI.Models
+namespace MimicAPI.v1.Models.DTO
 {
-    public class Palavra
+    public class PalavraDTO : BaseDTO
     {
         public int Id { get; set; }
         public string Nome { get; set; }
@@ -13,5 +13,6 @@ namespace MimicAPI.Models
         public bool Ativo { get; set; }
         public DateTime Criado { get; set; }
         public DateTime? Atualizado { get; set; }
+
     }
 }

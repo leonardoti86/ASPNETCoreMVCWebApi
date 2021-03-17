@@ -2,12 +2,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MimicAPI.Database;
 using MimicAPI.Helpers;
-using MimicAPI.Repositories;
-using MimicAPI.Repositories.Contracts;
+using MimicAPI.v1.Repositories;
+using MimicAPI.v1.Repositories.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,7 +41,13 @@ namespace MimicAPI
             IMapper mapper = config.CreateMapper();
             services.AddSingleton(mapper); // uma única instancia na aplicação utilizando esse "mapeador"
 
-
+            services.AddApiVersioning(cfg =>
+            {
+                cfg.ReportApiVersions = true; //da a opção ao usuario de consumir versões compatíveis
+                //cfg.ApiVersionReader = new HeaderApiVersionReader("api-version"); //nome da variavel que chega pelo request contendo a versão escolhida
+                cfg.AssumeDefaultVersionWhenUnspecified = true; // se usuario não especificar versão usa-se a default(especificada abaixo)
+                cfg.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0); // interessante qdo a versão vier no cabeçalho
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

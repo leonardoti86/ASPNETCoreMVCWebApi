@@ -1,14 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MimicAPI.Database;
 using MimicAPI.Helpers;
-using MimicAPI.Models;
-using MimicAPI.Repositories.Contracts;
+using MimicAPI.v1.Models;
+using MimicAPI.v1.Repositories.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MimicAPI.Repositories
+namespace MimicAPI.v1.Repositories
 {
     public class PalavraRepository : IPalavraRepository
     {
@@ -47,7 +47,7 @@ namespace MimicAPI.Repositories
                 lista.Paginacao = paginacao;
             }
 
-            lista.AddRange(item.ToList());
+            lista.Results.AddRange(item.ToList());
 
             return lista;
         }
