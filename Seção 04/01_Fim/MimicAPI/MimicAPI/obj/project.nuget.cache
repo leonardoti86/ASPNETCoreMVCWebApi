@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "/tpDxJN2q6V29y72023pGLhmOlAchPOTEGr/VuWVjyg1LNT2KlGPJ2hlMkcn/kO0tb/ByOad3vTf4aXrrxLcsg==",
+  "dgSpecHash": "mFGuUYHUnQ1htbMCU0DHpNB9a6q4Qai10h4RSptwgGIkid0zWacJbBbZ7ZoDb0PG/1Z9Ge4Hs4XX5eI/5aOq7Q==",
   "success": true,
   "projectFilePath": "C:\\ESTUDO\\FontesGitHub\\Curso ASP.NET Core WebAPI\\ASPNETCoreMVCWebApi\\Seção 04\\01_Fim\\MimicAPI\\MimicAPI\\MimicAPI.csproj",
   "expectedPackageFiles": [
@@ -163,6 +163,7 @@
     "C:\\Users\\leopa\\.nuget\\packages\\microsoft.extensions.options\\2.2.0\\microsoft.extensions.options.2.2.0.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\microsoft.extensions.options.configurationextensions\\2.2.0\\microsoft.extensions.options.configurationextensions.2.2.0.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\microsoft.extensions.options.dataannotations\\2.2.0\\microsoft.extensions.options.dataannotations.2.2.0.nupkg.sha512",
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\microsoft.extensions.platformabstractions\\1.1.0\\microsoft.extensions.platformabstractions.1.1.0.nupkg.sha512",
     "C:\\Users\\leopa\\.nuget\\packages\\microsoft.extensions.primitives\\2.2.0\\microsoft.extensions.primitives.2.2.0.nupkg.sha512",
     "C:\\Users\\leopa\\.nuget\\packages\\microsoft.extensions.webencoders\\2.2.0\\microsoft.extensions.webencoders.2.2.0.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\microsoft.identitymodel.jsonwebtokens\\5.3.0\\microsoft.identitymodel.jsonwebtokens.5.3.0.nupkg.sha512",
@@ -211,6 +212,10 @@
     "C:\\Users\\leopa\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3.osx\\1.1.12\\sqlitepclraw.lib.e_sqlite3.osx.1.1.12.nupkg.sha512",
     "C:\\Users\\leopa\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3.v110_xp\\1.1.12\\sqlitepclraw.lib.e_sqlite3.v110_xp.1.1.12.nupkg.sha512",
     "C:\\Users\\leopa\\.nuget\\packages\\sqlitepclraw.provider.e_sqlite3.netstandard11\\1.1.12\\sqlitepclraw.provider.e_sqlite3.netstandard11.1.1.12.nupkg.sha512",
+    "C:\\Users\\leopa\\.nuget\\packages\\swashbuckle.aspnetcore\\4.0.1\\swashbuckle.aspnetcore.4.0.1.nupkg.sha512",
+    "C:\\Users\\leopa\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\4.0.1\\swashbuckle.aspnetcore.swagger.4.0.1.nupkg.sha512",
+    "C:\\Users\\leopa\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\4.0.1\\swashbuckle.aspnetcore.swaggergen.4.0.1.nupkg.sha512",
+    "C:\\Users\\leopa\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\4.0.1\\swashbuckle.aspnetcore.swaggerui.4.0.1.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\system.appcontext\\4.3.0\\system.appcontext.4.3.0.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\system.buffers\\4.5.0\\system.buffers.4.5.0.nupkg.sha512",
     "C:\\Users\\leopa\\.nuget\\packages\\system.collections\\4.3.0\\system.collections.4.3.0.nupkg.sha512",

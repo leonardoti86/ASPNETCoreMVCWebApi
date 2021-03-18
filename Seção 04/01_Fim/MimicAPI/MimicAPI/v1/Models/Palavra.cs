@@ -10,6 +10,7 @@ namespace MimicAPI.v1.Models
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "O nome é obrigatório!")]
+        [MaxLength(150)]
         public string Nome { get; set; }
         [Required(ErrorMessage = "A pontuação é obrigatória!")]
         public int Pontuacao { get; set; }

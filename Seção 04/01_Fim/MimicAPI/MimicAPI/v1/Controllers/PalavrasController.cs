@@ -30,6 +30,11 @@ namespace MimicAPI.v1.Controllers
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Operação que pega do banco todas as palavras existentes.
+        /// </summary>
+        /// <param name="query">Filtros de pesquisa</param>
+        /// <returns>Listagem de palavras</returns>
         [MapToApiVersion("1.0")]
         [MapToApiVersion("1.1")]
         //[Route("")]
@@ -50,7 +55,11 @@ namespace MimicAPI.v1.Controllers
         }
 
 
-
+        /// <summary>
+        /// Operação que pega uma única palavra da base de dados
+        /// </summary>
+        /// <param name="id">codigo identificador da palavra</param>
+        /// <returns>objeto de palavra</returns>
         [MapToApiVersion("1.0")]
         [MapToApiVersion("1.1")]
         //[Route("{id}")] //usado no parametro do HttpGet em baixo. isso corrige o problema de enviar via queryString o id.
@@ -72,7 +81,11 @@ namespace MimicAPI.v1.Controllers
             return Ok(palavraDTO);
         }
 
-
+        /// <summary>
+        /// Operação que realiza o cadastro da palavra
+        /// </summary>
+        /// <param name="palavra">um objeto palavra</param>
+        /// <returns>um objeto palavra com seu Id</returns>
         [MapToApiVersion("1.0")]
         [MapToApiVersion("1.1")]
         [Route("")]
@@ -95,7 +108,12 @@ namespace MimicAPI.v1.Controllers
             return Created($"/api/palavras/{palavra.Id}", palavraDTO);
         }
 
-
+        /// <summary>
+        /// Operação que realiza a substituição de dados de uma palavra específica.
+        /// </summary>
+        /// <param name="id">Codigo identificador da palavra a ser alterada</param>
+        /// <param name="palavra"></param>
+        /// <returns></returns>
         [MapToApiVersion("1.0")]
         [MapToApiVersion("1.1")]
         //[Route("{id}")]
@@ -125,8 +143,13 @@ namespace MimicAPI.v1.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Operação que desativa uma palavra do sistema
+        /// </summary>
+        /// <param name="id">Codigo identificador da palavra</param>
+        /// <returns></returns>
         [MapToApiVersion("1.1")]
-        [Route("{id}")]
+        //[Route("{id}")]
         [HttpDelete("{id}", Name = "ExcluirPalavra")]
         public ActionResult Deletar(int id)
         {
