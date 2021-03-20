@@ -17,6 +17,7 @@ namespace MinhasTarefasAPI.Repositories
         {
             _userManager = userManager;
         }
+
         public ApplicationUser Obter(string email, string senha)
         {
             var usuario = _userManager.FindByEmailAsync(email).Result;
@@ -45,7 +46,7 @@ namespace MinhasTarefasAPI.Repositories
                     sb.Append(erro.Description);
                 }
                 
-                throw new Exception($"Usuario não cadastrado! {sb.ToString()}");
+                throw new Exception($"Usuario não cadastrado! {sb}");
             }
         }
 
