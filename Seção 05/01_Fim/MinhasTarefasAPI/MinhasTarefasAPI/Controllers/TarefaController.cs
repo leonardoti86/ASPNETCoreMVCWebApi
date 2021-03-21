@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MinhasTarefasAPI.Models;
@@ -23,12 +24,22 @@ namespace MinhasTarefasAPI.Controllers
             _userManager = userManager;
         }
 
+        [Authorize]
+        [HttpPost("sincronizar")]
         public ActionResult Sincronizar([FromBody]List<Tarefa> tarefas)
         {
             //retorna todas as tarefas que foram cadastradas no BD
             return Ok(_tarefaRepository.Sincronizacao(tarefas));
         }
 
+        [HttpGet("modelo")]
+        public ActionResult Modelo()
+        {
+            return Ok(new Tarefa());
+        }
+
+        [Authorize]
+        [HttpGet("restaurar")]
         public ActionResult Restaurar(DateTime data)
         {
             var usuario = _userManager.GetUserAsync(HttpContext.User).Result;

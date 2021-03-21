@@ -28,6 +28,7 @@ namespace MinhasTarefasAPI.Controllers
             _userManager = userManager;
         }
 
+        [HttpPost("login")]
         public ActionResult Login([FromBody] UsuarioDTO usuarioDTO)
         {
             ModelState.Remove("Nome");
@@ -58,6 +59,7 @@ namespace MinhasTarefasAPI.Controllers
 
         }
 
+        [HttpPost("")]
         public ActionResult Cadastrar([FromBody] UsuarioDTO usuarioDTO)   
         {
             if (ModelState.IsValid)
@@ -65,6 +67,7 @@ namespace MinhasTarefasAPI.Controllers
                 ApplicationUser usuario = new ApplicationUser()
                 {
                     FullName = usuarioDTO.Nome,
+                    UserName = usuarioDTO.Email, //tipo nome de usuario para fazer login. deve ser único.
                     Email = usuarioDTO.Email
                 };
 

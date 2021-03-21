@@ -32,7 +32,9 @@ namespace MinhasTarefasAPI.Repositories
         public List<Tarefa> Sincronizacao(List<Tarefa> tarefas)
         {
             //lista todas as tarefas que não foram persistidas no banco
-            var tarefasNovas = tarefas.Where(t => t.IdTarefaApi == 0);
+            var tarefasNovas = tarefas.Where(t => t.IdTarefaApi == 0).ToList();
+            //lista todas as tarefas que já foram persistidas no banco
+            var tarefasExcluidasAtualizadas = tarefas.Where(t => t.IdTarefaApi != 0).ToList();
 
             // 1) cadastrar novos registros
             if (tarefasNovas.Count() > 0)
@@ -43,8 +45,6 @@ namespace MinhasTarefasAPI.Repositories
                 }
             }
 
-            //lista todas as tarefas que já foram persistidas no banco
-            var tarefasExcluidasAtualizadas = tarefas.Where(t => t.IdTarefaApi != 0);
 
             // 2) atualização de registro (excluido)
             if (tarefasExcluidasAtualizadas.Count() > 0)
