@@ -157,23 +157,50 @@ namespace MinhasTarefasAPI.Migrations
                 name: "Tarefas",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    IdTarefaApi = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    IdTarefaApp = table.Column<int>(nullable: false),
                     Titulo = table.Column<string>(nullable: true),
                     DataHora = table.Column<DateTime>(nullable: false),
                     Local = table.Column<string>(nullable: true),
                     Descricao = table.Column<string>(nullable: true),
                     Tipo = table.Column<string>(nullable: true),
                     Concluido = table.Column<bool>(nullable: false),
+                    Excluido = table.Column<bool>(nullable: false),
                     Criado = table.Column<DateTime>(nullable: false),
                     Atualizado = table.Column<DateTime>(nullable: false),
                     UsuarioId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tarefas", x => x.Id);
+                    table.PrimaryKey("PK_Tarefas", x => x.IdTarefaApi);
                     table.ForeignKey(
                         name: "FK_Tarefas_AspNetUsers_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Token",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    RefreshToken = table.Column<string>(nullable: true),
+                    UsuarioId = table.Column<string>(nullable: true),
+                    Utilizado = table.Column<bool>(nullable: false),
+                    ExpirationToken = table.Column<DateTime>(nullable: false),
+                    ExpirationRefreshToken = table.Column<DateTime>(nullable: false),
+                    Criado = table.Column<DateTime>(nullable: false),
+                    Atualizado = table.Column<DateTime>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Token", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Token_AspNetUsers_UsuarioId",
                         column: x => x.UsuarioId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -221,6 +248,11 @@ namespace MinhasTarefasAPI.Migrations
                 name: "IX_Tarefas_UsuarioId",
                 table: "Tarefas",
                 column: "UsuarioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Token_UsuarioId",
+                table: "Token",
+                column: "UsuarioId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -242,6 +274,9 @@ namespace MinhasTarefasAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "Tarefas");
+
+            migrationBuilder.DropTable(
+                name: "Token");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

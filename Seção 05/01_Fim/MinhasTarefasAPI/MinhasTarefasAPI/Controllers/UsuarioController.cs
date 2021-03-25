@@ -46,22 +46,7 @@ namespace MinhasTarefasAPI.Controllers
                     //_signInManager.SignInAsync(usuario, false); //não usar o login do Identity pq guarda estado no cookie. o JWT não guarda.
 
                     //retornar o token (JWT)
-                    TokenDTO token = BuildToken(usuario);
-
-                    //Salvar o token no banco
-                    var tokenModel = new Token()
-                    {
-                        RefreshToken = token.RefreshToken,
-                        ExpirationRefreshToken = token.ExpirationRefreshToken,
-                        ExpirationToken = token.Expiration,
-                        Usuario = usuario,
-                        Criado = DateTime.Now,
-                        Utilizado = false
-                    };
-
-                    _tokenRepository.Cadastrar(tokenModel);
-
-                    return Ok(token);
+                    return GerarToken(usuario);
                 }
                 else
                 {
@@ -76,6 +61,25 @@ namespace MinhasTarefasAPI.Controllers
 
         }
 
+        
+
+        [HttpPost("renovar")]
+        public ActionResult Renovar([FromBody] TokenDTO tokenDTO)
+        {
+            var refreshTokenDB =  _tokenRepository.Obter(tokenDTO.RefreshToken);
+
+            if (refreshTokenDB == null)
+                return NotFound();
+
+            //pegar o refreshToken antigo e atualizar(desativar esse refreshToken)
+            refreshTokenDB.Atualizado = DateTime.UtcNow;
+            refreshTokenDB.Utilizado = true;
+            _tokenRepository.Atualizar(refreshTokenDB);
+
+            //gerar um novo token com seu refresh token e salvar no banco
+            var usuario = _usuarioRepository.Obter(refreshTokenDB.UsuarioId);
+            return GerarToken(usuario);
+        }
 
         [HttpPost("")]
         public ActionResult Cadastrar([FromBody] UsuarioDTO usuarioDTO)   
@@ -146,6 +150,25 @@ namespace MinhasTarefasAPI.Controllers
             var tokenDTO = new TokenDTO { Token = tokenString, Expiration = exp, ExpirationRefreshToken = expRefreshToken, RefreshToken = refreshToken };
 
             return tokenDTO;
+        }
+        private ActionResult GerarToken(ApplicationUser usuario)
+        {
+            TokenDTO token = BuildToken(usuario);
+
+            //Salvar o token no banco
+            var tokenModel = new Token()
+            {
+                RefreshToken = token.RefreshToken,
+                ExpirationRefreshToken = token.ExpirationRefreshToken,
+                ExpirationToken = token.Expiration,
+                Usuario = usuario,
+                Criado = DateTime.Now,
+                Utilizado = false
+            };
+
+            _tokenRepository.Cadastrar(tokenModel);
+
+            return Ok(token);
         }
     }
 }

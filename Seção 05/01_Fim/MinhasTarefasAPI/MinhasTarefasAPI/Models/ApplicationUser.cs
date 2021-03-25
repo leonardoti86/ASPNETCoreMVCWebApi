@@ -15,5 +15,8 @@ namespace MinhasTarefasAPI.Models
 
         [ForeignKey("UsuarioId")] // a chave estrangeira vai para a tabela mais fraca
         public virtual ICollection<Tarefa> Tarefas { get; set; }
+
+        [ForeignKey("UsuarioId")] 
+        public virtual ICollection<Token> Tokens { get; set; }
     }
 }

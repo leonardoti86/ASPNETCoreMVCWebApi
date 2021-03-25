@@ -290,7 +290,7 @@ namespace MinhasTarefasAPI.Migrations
             modelBuilder.Entity("MinhasTarefasAPI.Models.Token", b =>
                 {
                     b.HasOne("MinhasTarefasAPI.Models.ApplicationUser", "Usuario")
-                        .WithMany()
+                        .WithMany("Tokens")
                         .HasForeignKey("UsuarioId");
                 });
 #pragma warning restore 612, 618
