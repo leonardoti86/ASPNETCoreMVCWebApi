@@ -1,12 +1,12 @@
 ﻿using MinhasTarefasAPI.Database;
-using MinhasTarefasAPI.Models;
-using MinhasTarefasAPI.Repositories.Contracts;
+using MinhasTarefasAPI.v1.Models;
+using MinhasTarefasAPI.v1.Repositories.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MinhasTarefasAPI.Repositories
+namespace MinhasTarefasAPI.v1.Repositories
 {
     public class TokenRepository : ITokenRepository
     {

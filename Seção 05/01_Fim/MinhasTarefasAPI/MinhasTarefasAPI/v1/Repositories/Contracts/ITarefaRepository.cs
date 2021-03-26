@@ -1,10 +1,10 @@
-﻿using MinhasTarefasAPI.Models;
+﻿using MinhasTarefasAPI.v1.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MinhasTarefasAPI.Repositories.Contracts
+namespace MinhasTarefasAPI.v1.Repositories.Contracts
 {
     public interface ITarefaRepository
     {

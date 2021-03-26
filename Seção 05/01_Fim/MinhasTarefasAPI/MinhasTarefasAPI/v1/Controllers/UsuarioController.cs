@@ -1,18 +1,19 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using MinhasTarefasAPI.Models;
-using MinhasTarefasAPI.Repositories.Contracts;
+using MinhasTarefasAPI.v1.Models;
+using MinhasTarefasAPI.v1.Repositories.Contracts;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace MinhasTarefasAPI.Controllers
+namespace MinhasTarefasAPI.v1.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
     public class UsuarioController : ControllerBase
     {
         //injeções
@@ -60,8 +61,6 @@ namespace MinhasTarefasAPI.Controllers
 
 
         }
-
-        
 
         [HttpPost("renovar")]
         public ActionResult Renovar([FromBody] TokenDTO tokenDTO)
@@ -115,6 +114,7 @@ namespace MinhasTarefasAPI.Controllers
                 return UnprocessableEntity(ModelState);
             }
         }
+
         private TokenDTO BuildToken(ApplicationUser usuario)
         {
             //cria as claims do JWT. existem iss, aud, exp etc
@@ -151,6 +151,7 @@ namespace MinhasTarefasAPI.Controllers
 
             return tokenDTO;
         }
+
         private ActionResult GerarToken(ApplicationUser usuario)
         {
             TokenDTO token = BuildToken(usuario);

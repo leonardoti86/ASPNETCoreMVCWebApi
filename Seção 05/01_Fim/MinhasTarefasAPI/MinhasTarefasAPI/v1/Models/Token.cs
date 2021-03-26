@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MinhasTarefasAPI.Models
+namespace MinhasTarefasAPI.v1.Models
 {
     public class Token
     {
