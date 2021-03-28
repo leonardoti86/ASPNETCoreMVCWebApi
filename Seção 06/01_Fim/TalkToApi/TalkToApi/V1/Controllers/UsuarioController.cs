@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using TalkToApi.V1.Repositories.Contracts;
 using TalkToApi.V1.Models;
+using TalkToApi.V1.Models.DTO;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TalkToApi.V1.Controllers
 {
@@ -32,6 +34,25 @@ namespace TalkToApi.V1.Controllers
             _tokenRepository = tokenRepository;
             _signInManager = signInManager;
             _userManager = userManager;
+        }
+
+        [Authorize]
+        [HttpGet("")]
+        public ActionResult ObterTodos()
+        {
+            return Ok(_userManager.Users);
+        }
+
+        [Authorize]
+        [HttpGet("{id}")]
+        public ActionResult ObterUsuario(string id)
+        {
+            var usuario = _userManager.FindByIdAsync(id).Result;
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+            return Ok(usuario);
         }
 
         [HttpPost("login")]
@@ -96,6 +117,51 @@ namespace TalkToApi.V1.Controllers
                 };
 
                 var resultado = _userManager.CreateAsync(usuario, usuarioDTO.Senha).Result;
+
+                if (!resultado.Succeeded)
+                {
+                    List<string> erros = new List<string>();
+                    foreach (var erro in resultado.Errors)
+                    {
+                        erros.Add(erro.Description);
+                    }
+                    return UnprocessableEntity(erros);
+                }
+                else
+                {
+                    return Ok(usuario);
+                }
+
+            }
+            else
+            {
+                return UnprocessableEntity(ModelState);
+            }
+        }
+
+        [Authorize]
+        [HttpPut("{id}")]
+        public ActionResult Atualizar(string id, [FromBody] UsuarioDTO usuarioDTO)
+        {
+            //TODO - adicionar filtro de validação
+            ApplicationUser usuario = _userManager.GetUserAsync(HttpContext.User).Result;
+            if (usuario.Id != id)
+            {
+                return Forbid();
+            }
+
+            if (ModelState.IsValid)
+            {
+                //TODO - refatorar para automapper
+                usuario.FullName = usuarioDTO.Nome;
+                usuario.UserName = usuarioDTO.Email; //tipo nome de usuario para fazer login. deve ser único.
+                usuario.Email = usuarioDTO.Email;
+                usuario.Slogan = usuarioDTO.Slogan;
+                
+                //TODO - remover no Identity critérios da senha.
+                var resultado = _userManager.UpdateAsync(usuario).Result;
+                _userManager.RemovePasswordAsync(usuario);
+                _userManager.AddPasswordAsync(usuario, usuarioDTO.Senha);
 
                 if (!resultado.Succeeded)
                 {

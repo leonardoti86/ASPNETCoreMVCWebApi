@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,7 +14,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.IdentityModel.Tokens;
-
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.Collections.Generic;
@@ -22,6 +22,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TalkToApi.Database;
+using TalkToApi.Helpers;
 using TalkToApi.Helpers.Swagger;
 using TalkToApi.V1.Models;
 using TalkToApi.V1.Repositories;
@@ -41,6 +42,13 @@ namespace TalkToApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Configura AutoMapper
+            var config = new MapperConfiguration(cfg => {
+                cfg.AddProfile(new DTOMapperProfile());
+            });
+            IMapper mapper = config.CreateMapper();
+            services.AddSingleton(mapper); // uma única instancia na aplicação utilizando esse "mapeador"
+
             //suprime.. retira a validação do modelstate que roda antes de entrar no metodo da API... coisa que o notation ApiController faz..
             services.Configure<ApiBehaviorOptions>(op =>
             {
@@ -51,16 +59,17 @@ namespace TalkToApi
             //Repositories
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
             services.AddScoped<ITokenRepository, TokenRepository>();
+            services.AddScoped<IMensagemRepository, MensagemRepository>();
 
             services.AddDbContext<TalkToContext>(cfg => {
                 cfg.UseSqlite("Data Source=Database\\TalkTo.db");
             });
 
-            services.AddMvc(config =>
+            services.AddMvc(cfg =>
             {
-                config.ReturnHttpNotAcceptable = true; //se tipo de retorno não aceitavel retorna 406
-                config.InputFormatters.Add(new XmlSerializerInputFormatter(config)); //API permite receber XML como request
-                config.OutputFormatters.Add(new XmlSerializerOutputFormatter()); //API permite devolver XML como response
+                cfg.ReturnHttpNotAcceptable = true; //se tipo de retorno não aceitavel retorna 406
+                cfg.InputFormatters.Add(new XmlSerializerInputFormatter(cfg)); //API permite receber XML como request
+                cfg.OutputFormatters.Add(new XmlSerializerOutputFormatter()); //API permite devolver XML como response
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
             .AddJsonOptions(opt =>
                     opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
