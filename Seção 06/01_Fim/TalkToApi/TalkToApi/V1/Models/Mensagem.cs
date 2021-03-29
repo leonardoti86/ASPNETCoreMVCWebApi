@@ -26,6 +26,11 @@ namespace TalkToApi.V1.Models
         
         [Required]
         public string Texto { get; set; }
+        
         public DateTime Criado { get; set; }
+
+        public DateTime? Atualizado { get; set; }
+
+        public bool Excluido { get; set; }
     }
 }
