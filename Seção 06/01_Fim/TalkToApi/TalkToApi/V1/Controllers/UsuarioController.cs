@@ -13,6 +13,7 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
 
 namespace TalkToApi.V1.Controllers
 {
@@ -22,14 +23,16 @@ namespace TalkToApi.V1.Controllers
     public class UsuarioController : ControllerBase
     {
         //injeções
+        private readonly IMapper _mapper;
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly ITokenRepository _tokenRepository;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
 
 
-        public UsuarioController(IUsuarioRepository usuarioRepository, ITokenRepository tokenRepository, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
+        public UsuarioController(IMapper mapper, IUsuarioRepository usuarioRepository, ITokenRepository tokenRepository, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
         {
+            _mapper = mapper;
             _usuarioRepository = usuarioRepository;
             _tokenRepository = tokenRepository;
             _signInManager = signInManager;
@@ -37,14 +40,26 @@ namespace TalkToApi.V1.Controllers
         }
 
         [Authorize]
-        [HttpGet("")]
+        [HttpGet("", Name = "ObterTodos")]
         public ActionResult ObterTodos()
         {
-            return Ok(_userManager.Users);
+            var usuariosAppUser = _userManager.Users.ToList();
+
+            var listaUsuarioDTO = _mapper.Map<List<ApplicationUser>, List<UsuarioDTO>>(usuariosAppUser);
+
+            foreach (var usuarioDTO in listaUsuarioDTO)
+            {
+                usuarioDTO.Links.Add(new LinkDTO("_self", Url.Link("ObterUsuario", new { id = usuarioDTO.Id }), "GET"));
+            }
+
+            var lista = new ListaDTO<UsuarioDTO>() { Lista = listaUsuarioDTO };
+            lista.Links.Add(new LinkDTO("_self", Url.Link("ObterTodos", null), "GET"));
+
+            return Ok(lista);
         }
 
         [Authorize]
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "ObterUsuario")]
         public ActionResult ObterUsuario(string id)
         {
             var usuario = _userManager.FindByIdAsync(id).Result;
@@ -52,7 +67,13 @@ namespace TalkToApi.V1.Controllers
             {
                 return NotFound();
             }
-            return Ok(usuario);
+
+            var usuarioDTOdb = _mapper.Map<ApplicationUser, UsuarioDTO>(usuario);
+
+            usuarioDTOdb.Links.Add(new LinkDTO("_self", Url.Link("ObterUsuario", new { id = usuario.Id }), "GET"));
+            usuarioDTOdb.Links.Add(new LinkDTO("_atualizar", Url.Link("Atualizar", new { id = usuario.Id }), "PUT"));
+
+            return Ok(usuarioDTOdb);
         }
 
         [HttpPost("login")]
@@ -104,7 +125,7 @@ namespace TalkToApi.V1.Controllers
             return GerarToken(usuario);
         }
 
-        [HttpPost("")]
+        [HttpPost("", Name = "Cadastrar")]
         public ActionResult Cadastrar([FromBody] UsuarioDTO usuarioDTO)
         {
             if (ModelState.IsValid)
@@ -129,7 +150,13 @@ namespace TalkToApi.V1.Controllers
                 }
                 else
                 {
-                    return Ok(usuario);
+                    var usuarioDTOdb = _mapper.Map<ApplicationUser, UsuarioDTO>(usuario);
+
+                    usuarioDTOdb.Links.Add(new LinkDTO("_self", Url.Link("Cadastrar", new { id = usuario.Id }), "POST"));
+                    usuarioDTOdb.Links.Add(new LinkDTO("_obter", Url.Link("ObterUsuario", new { id = usuario.Id }), "GET"));
+                    usuarioDTOdb.Links.Add(new LinkDTO("_atualizar", Url.Link("Atualizar", new { id = usuario.Id }), "PUT"));
+
+                    return Ok(usuarioDTOdb);
                 }
 
             }
@@ -140,7 +167,7 @@ namespace TalkToApi.V1.Controllers
         }
 
         [Authorize]
-        [HttpPut("{id}")]
+        [HttpPut("{id}", Name = "Atualizar")]
         public ActionResult Atualizar(string id, [FromBody] UsuarioDTO usuarioDTO)
         {
             //TODO - adicionar filtro de validação
@@ -174,7 +201,12 @@ namespace TalkToApi.V1.Controllers
                 }
                 else
                 {
-                    return Ok(usuario);
+                    var usuarioDTOdb = _mapper.Map<ApplicationUser, UsuarioDTO>(usuario);
+
+                    usuarioDTOdb.Links.Add(new LinkDTO("_self", Url.Link("Atualizar", new { id = usuario.Id }), "PUT"));
+                    usuarioDTOdb.Links.Add(new LinkDTO("_obter", Url.Link("ObterUsuario", new { id = usuario.Id }), "GET"));
+
+                    return Ok(usuarioDTOdb);
                 }
 
             }
