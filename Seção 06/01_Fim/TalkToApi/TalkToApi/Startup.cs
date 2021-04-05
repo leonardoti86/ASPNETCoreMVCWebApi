@@ -23,6 +23,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TalkToApi.Database;
 using TalkToApi.Helpers;
+using TalkToApi.Helpers.Constants;
 using TalkToApi.Helpers.Swagger;
 using TalkToApi.V1.Models;
 using TalkToApi.V1.Repositories;
@@ -70,6 +71,14 @@ namespace TalkToApi
                 cfg.ReturnHttpNotAcceptable = true; //se tipo de retorno não aceitavel retorna 406
                 cfg.InputFormatters.Add(new XmlSerializerInputFormatter(cfg)); //API permite receber XML como request
                 cfg.OutputFormatters.Add(new XmlSerializerOutputFormatter()); //API permite devolver XML como response
+
+                var jsonOutputFormatter = cfg.OutputFormatters.OfType<JsonOutputFormatter>().FirstOrDefault();
+                if (jsonOutputFormatter != null)
+                {
+                    //adiciona dois media types no Accept do request: vnd.talkto.hateoas e json
+                    jsonOutputFormatter.SupportedMediaTypes.Add(CustomMediaType.HATEOAS); // esse mediaType permite vc criar um tipo de retorno especifico da sua empresa.
+                }
+
             }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
             .AddJsonOptions(opt =>
                     opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
