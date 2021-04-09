@@ -15,12 +15,14 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using TalkToApi.Helpers.Constants;
+using Microsoft.AspNetCore.Cors;
 
 namespace TalkToApi.V1.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [ApiVersion("1.0")]
+    [EnableCors("AnyOrigin")]
     public class UsuarioController : ControllerBase
     {
         //injeções
@@ -42,6 +44,7 @@ namespace TalkToApi.V1.Controllers
 
         [Authorize]
         [HttpGet("", Name = "UsuarioObterTodos")]
+        [DisableCors]
         public ActionResult ObterTodos([FromHeader(Name = "Accept")] string mediaType)
         {
             var usuariosAppUser = _userManager.Users.ToList();

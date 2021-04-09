@@ -44,7 +44,8 @@ namespace TalkToApi
         public void ConfigureServices(IServiceCollection services)
         {
             //Configura AutoMapper
-            var config = new MapperConfiguration(cfg => {
+            var config = new MapperConfiguration(cfg =>
+            {
                 cfg.AddProfile(new DTOMapperProfile());
             });
             IMapper mapper = config.CreateMapper();
@@ -62,8 +63,35 @@ namespace TalkToApi
             services.AddScoped<ITokenRepository, TokenRepository>();
             services.AddScoped<IMensagemRepository, MensagemRepository>();
 
-            services.AddDbContext<TalkToContext>(cfg => {
+            services.AddDbContext<TalkToContext>(cfg =>
+            {
                 cfg.UseSqlite("Data Source=Database\\TalkTo.db");
+            });
+
+            /*
+            trata as politicas de CORS
+            o CORS verifica o Dominio, Subdominio, Protocolo e Porta da requisição se é da mesma origem. 
+            se um desses for diferente da origem, o CORS irá barrar.
+            */
+            services.AddCors(cfg =>
+            {
+                cfg.AddDefaultPolicy(policy => {
+                    policy
+                        .WithOrigins("https://localhost:44390") //autoriza apenas requisições externas vindas dessa URL
+                        .AllowAnyMethod()
+                        .SetIsOriginAllowedToAllowWildcardSubdomains() //autoriza qualquer subdominio da origem
+                        .AllowAnyHeader();
+                    //.WithMethods("GET") //autoriza apenas para metodos GET da URL de cima
+                    //.WithHeaders("Accept", "Authorization");
+                });
+
+                //habilitar todos os sites, sem restrição
+                cfg.AddPolicy("AnyOrigin", policy => {
+                    policy
+                        .AllowAnyOrigin()
+                        .WithMethods("GET")
+                        .AllowAnyHeader();
+                });
             });
 
             services.AddMvc(cfg =>
@@ -94,7 +122,8 @@ namespace TalkToApi
             });
 
             //adicionando o Swagger
-            services.AddSwaggerGen(cfg => {
+            services.AddSwaggerGen(cfg =>
+            {
 
                 //adiciona o header no swagger
                 cfg.AddSecurityDefinition("Bearer", new ApiKeyScheme()
@@ -209,6 +238,8 @@ namespace TalkToApi
             app.UseStatusCodePages();  //para qdo rodar a api no debug aparecer na tela o status code atual
             //app.UseAuthentication(); //pra usar o notation [Authorize]
             app.UseHttpsRedirection();
+            //app.UseCors("AnyOrigin"); não recomendado usar assim qdo se usa atributos EnableCors/DisableCors
+
             app.UseMvc();
 
             app.UseSwagger(); //vai criar um arquivo no /swagger/v1/swagger.json
