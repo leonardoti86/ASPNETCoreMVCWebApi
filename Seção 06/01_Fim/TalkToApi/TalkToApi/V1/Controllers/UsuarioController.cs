@@ -102,12 +102,13 @@ namespace TalkToApi.V1.Controllers
         {
             if (ModelState.IsValid)
             {
-                ApplicationUser usuario = new ApplicationUser()
-                {
-                    FullName = usuarioDTO.Nome,
-                    UserName = usuarioDTO.Email, //tipo nome de usuario para fazer login. deve ser único.
-                    Email = usuarioDTO.Email
-                };
+                //ApplicationUser usuario = new ApplicationUser()
+                //{
+                //    FullName = usuarioDTO.Nome,
+                //    UserName = usuarioDTO.Email, //tipo nome de usuario para fazer login. deve ser único.
+                //    Email = usuarioDTO.Email
+                //};
+                ApplicationUser usuario = _mapper.Map<UsuarioDTO, ApplicationUser>(usuarioDTO); // faz o passo de cima
 
                 var resultado = _userManager.CreateAsync(usuario, usuarioDTO.Senha).Result;
 
@@ -151,7 +152,6 @@ namespace TalkToApi.V1.Controllers
         [HttpPut("{id}", Name = "UsuarioAtualizar")]
         public ActionResult Atualizar(string id, [FromBody] UsuarioDTO usuarioDTO, [FromHeader(Name = "Accept")] string mediaType)
         {
-            //TODO - adicionar filtro de validação
             ApplicationUser usuario = _userManager.GetUserAsync(HttpContext.User).Result;
             if (usuario.Id != id)
             {
@@ -160,13 +160,11 @@ namespace TalkToApi.V1.Controllers
 
             if (ModelState.IsValid)
             {
-                //TODO - refatorar para automapper
                 usuario.FullName = usuarioDTO.Nome;
                 usuario.UserName = usuarioDTO.Email; //tipo nome de usuario para fazer login. deve ser único.
                 usuario.Email = usuarioDTO.Email;
                 usuario.Slogan = usuarioDTO.Slogan;
 
-                //TODO - remover no Identity critérios da senha.
                 var resultado = _userManager.UpdateAsync(usuario).Result;
                 _userManager.RemovePasswordAsync(usuario);
                 _userManager.AddPasswordAsync(usuario, usuarioDTO.Senha);

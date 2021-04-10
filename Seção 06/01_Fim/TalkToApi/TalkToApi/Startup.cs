@@ -178,7 +178,14 @@ namespace TalkToApi
             //    .AddEntityFrameworkStores<TalkToContext>();
 
             //tira a tela default de erro 500 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>(options => {
+                //aqui tiramos as validações padrão de senha. não recomendado 
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 5;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false; // caracter especial
+            })
                 .AddEntityFrameworkStores<TalkToContext>()
                 .AddDefaultTokenProviders(); //permite que o Identity valide por token (JWT)
 
