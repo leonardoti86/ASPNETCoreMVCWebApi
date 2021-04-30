@@ -14,6 +14,12 @@ namespace MimicAPI.Database
 
         }
 
-        public DbSet<Palavra> Palavras { get; set; }
+        //criado construtor vazio para realização de teste unitário
+        public MimicContext()
+        {
+
+        }
+
+        public virtual DbSet<Palavra> Palavras { get; set; }
     }
 }
